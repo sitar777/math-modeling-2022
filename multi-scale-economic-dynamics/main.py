@@ -29,7 +29,7 @@ COEFFS_ITALY = [
 
 
 def ode_system(t, v):
-    coeffs = COEFFS_ITALY
+    coeffs = COEFFS_FRANCE
 
     x, y, z = v
 
@@ -45,7 +45,7 @@ def ode_system(t, v):
 if __name__ == '__main__':
 
     v0 = [25, 3, 115]
-    solution = RK45(ode_system, 0, v0, 1000000, 10)
+    solution = RK45(ode_system, 0, v0, 1000000, 1)
 
     t_values = []
     y_values = []
