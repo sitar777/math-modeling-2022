@@ -1,3 +1,4 @@
+from turtle import color
 from scipy.integrate import RK45
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,19 +18,6 @@ COEFFS_FRANCE = [
 ]
 
 
-COEFFS_ITALY = [
-    -.015,
-    0.1369,
-    -0.1853,
-    0.1981,
-    -1.1466,
-    0.0757,
-    0.0013,
-    1.0771,
-    -1.3245,
-]
-
-
 def ode_system(t, v):
     coeffs = COEFFS_FRANCE
 
@@ -45,8 +33,9 @@ def ode_system(t, v):
 
 
 if __name__ == '__main__':
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    fig, axs = plt.subplots(2, 2)
+    axs[0,0].remove()
+    axs[0,0]=fig.add_subplot(2,2,1,projection='3d')
 
     x_range = list(range(0, 80, 20))
     y_range = list(range(0, 80, 20))
@@ -63,8 +52,8 @@ if __name__ == '__main__':
     Yr = coeffs[3] * Y * (1 - Y) + coeffs[4] * Y * Z / (1 + Z) + coeffs[5] * X * Y,
     Zr = coeffs[6] * Z * (1 - Z) + coeffs[7] * Z * X / (1 + X) + coeffs[8] * Z * Y / (1 + Y),
 
-    plt.quiver(X, Y, Z, Xr, Yr, Zr, length=0.003)
-
+    axs[0,0].quiver(X, Y, Z, Xr, Yr, Zr, length=0.003)
+    
     v0_list = list(itertools.product(*[x_range, y_range, z_range]))
 
     for v0 in v0_list:
@@ -83,11 +72,35 @@ if __name__ == '__main__':
 
         x, y, z = zip(*y_values)
 
-        ax.plot(x, y, z, color='r')
+        axs[0,0].plot(x, y, z, color='r')
+        axs[0,0].plot(v0[0], v0[1], v0[2], marker='o', color='g')
+        axs[0,0].plot(x[-1], y[-1], z[-1], marker='o', color='b')
         print(x[-1], y[-1], z[-1])
 
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z')
+
+        axs[0,1].plot(x,y,color='r')
+        axs[0,1].plot(v0[0], v0[1], marker='o', color='g')
+        axs[0,1].plot(x[-1], y[-1], marker='o', color='b')
+        
+        axs[1,0].plot(y,z,color='r')
+        axs[1,0].plot(v0[1], v0[2], marker='o', color='g')
+        axs[1,0].plot(y[-1], z[-1], marker='o', color='b')
+        
+        axs[1,1].plot(x,z,color='r')
+        axs[1,1].plot(v0[0], v0[2], marker='o', color='g')
+        axs[1,1].plot(x[-1], z[-1], marker='o', color='b')
+
+    axs[0,1].set_xlabel('x')
+    axs[0,1].set_ylabel('y')
+
+    axs[1,0].set_xlabel('y')
+    axs[1,0].set_ylabel('z')
+
+    axs[1,1].set_xlabel('x')
+    axs[1,1].set_ylabel('z')
+
+    axs[0,0].set_xlabel('x')
+    axs[0,0].set_ylabel('y')
+    axs[0,0].set_zlabel('z')
 
     plt.show()
